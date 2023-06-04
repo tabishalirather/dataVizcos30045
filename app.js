@@ -6,7 +6,7 @@ function showLegend(svg, states) {
 	const numBars = 8;
 	const moveRight = 900
 	// const colors = ["#FF0000", "#00FF00", "#FFFF00", "#FF00FF", "#00FFFF", "#800080", "#0000FF", "#008080"]
-	const colors = ["#1f77b4", "gray", "#2ca02c", "#d62728", "#9467bd", "#ff7f0e", "#f2cfe5", "#17becf"];
+	const colors = ["#1f77b4", "gray", "#2ca02c", "#8c564b", "#9467bd", "#ff7f0e", "#d62728", "#17becf"];
 	stateNames = ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]
 
 	for (let i = 0; i < numBars; i++) {
@@ -186,7 +186,7 @@ function showGraph(data, width, height, svg, domain, subgroups) {
 	const color = d3.scaleOrdinal()
 		.domain(subgroups)
 		// .range(["#FF0000", "#00FF00", "#FFFF00", "#FF00FF", "#00FFFF", "#800080", "#0000FF", "#008080"])
-		.range(["#1f77b4", "gray", "#2ca02c", "#d62728", "#9467bd", "#ff7f0e", "#f2cfe5", "#17becf"])
+		.range(["#1f77b4", "gray", "#2ca02c", "#8c564b", "#9467bd", "#ff7f0e", "#d62728", "#17becf"])
 
 	// Show the bars
 	const chartGroup = svg
@@ -304,7 +304,7 @@ function removeDiv(id) {
 function lineChart() {
 
 	// set the dimensions and margins of the graph
-	var margin = { top: 40, right: 25, bottom: 30, left: 60 },
+	var margin = { top: 40, right: 65, bottom: 30, left: 60 },
 		width = 1160 - margin.left - margin.right,
 		height = 550 - margin.top - margin.bottom;
 
@@ -329,45 +329,46 @@ function lineChart() {
 			.call(d3.axisBottom(x).ticks(0));
 
 		//hard code the value for each year on xAxis to replace comma values(eg. 2,005)
+		distance = 127
 		svg.append("text")
 			.attr("x", -15)
 			.attr("y", 500)
 			.text("2012");
 		svg.append("text")
-			.attr("x", 107)
+			.attr("x", distance - 15)
 			.attr("y", 500)
 			.text("2013");
 		svg.append("text")
-			.attr("x", 229)
+			.attr("x", distance * 2)
 			.attr("y", 500)
 			.text("2014");
 		svg.append("text")
-			.attr("x", 351)
+			.attr("x", distance * 3)
 			.attr("y", 500)
 			.text("2015");
 		svg.append("text")
-			.attr("x", 473)
+			.attr("x", distance * 4)
 			.attr("y", 500)
 			.text("2016");
 		svg.append("text")
-			.attr("x", 595)
+			.attr("x", distance * 5)
 			.attr("y", 500)
 			.text("2017");
 		svg.append("text")
-			.attr("x", 717)
+			.attr("x", distance * 6)
 			.attr("y", 500)
 			.text("2018");
 		svg.append("text")
-			.attr("x", 839)
+			.attr("x", distance * 7)
 			.attr("y", 500)
 			.text("2019");
 		svg.append("text")
-			.attr("x", 961)
+			.attr("x", distance * 8)
 			.attr("y", 500)
 			.text("2020");
 		svg.append("text")
 			.attr("class", "y_axis_label")
-			.attr("x", 520)
+			.attr("x", 575)
 			.attr("y", 505)
 			.text("Year");
 
@@ -395,7 +396,7 @@ function lineChart() {
 		var res = sumstat.map(function (d) { return d.key }) // list of group names
 		var color = d3.scaleOrdinal()
 			.domain(res)
-			.range(["#1f77b4", "gray", "#2ca02c", "#d62728", "#9467bd", "#ff7f0e", "#f2cfe5", "#17becf"])
+			.range(["#1f77b4", "gray", "#2ca02c", "#8c564b", "#9467bd", "#ff7f0e", "#d62728", "#17becf"])
 
 		// Draw the line
 		const labels = svg.selectAll(".line")
@@ -458,12 +459,12 @@ function lineChart() {
 				})
 				.attr("x", function (d) {
 					if (d.State == tempState) {
-						return width - xScale(d.year) + 5;
+						return width - xScale(d.year) - 5;
 					}
 				})
 				.attr("y", function (d) {
 					if (d.State == tempState) {
-						return height - yScale(d.total_nom) - 10;
+						return height - yScale(d.total_nom) - 18;
 					}
 				})
 				.style("opacity", 1)
