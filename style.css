@@ -2,7 +2,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-      }
+}
 
 .headline {
 	font-family: Arial, sans-serif;
@@ -14,16 +14,17 @@ body {
 	padding: 20px;
 	border-radius: 10px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
+}
 
 .headline:hover {
 	background-color: #EAEAEA;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
+}
+
 .container {
-	 flex: 0.1;
-  	justify-content: center;
-  	/* align-items: center; */
+	flex: 0.1;
+	justify-content: center;
+	/* align-items: center; */
 }
 
 footer {
@@ -32,39 +33,19 @@ footer {
 	bottom: 0;
 	width: 100%;
 	background-color: red;
-	color:black;
+	color: black;
 	text-align: center;
 	padding: 10px;
 	margin-top: 20px;
 }
 
-#btn_one {
-	cursor: pointer;
-	background-color: black; /* Green */
-	border: none;
-	color: white;
-	padding: 15px 32px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-      }
-#btn_two {
-	cursor: pointer;
-	background-color: black; /* Green */
-	border: none;
-	color: white;
-	padding: 15px 32px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-      }
-
-      /* CSS */
+#btn_line,
+#btn_one,
+#btn_two,
 #btn_three {
 	cursor: pointer;
-	background-color: black; /* Green */
+	background-color: black;
+	/* Green */
 	border: none;
 	color: white;
 	padding: 15px 32px;
@@ -72,25 +53,23 @@ footer {
 	text-decoration: none;
 	display: inline-block;
 	font-size: 16px;
-      }
+}
 
 #btn_three:hover,
-#btn_three:focus {
-	background-color: grey;
-      }
-
+#btn_three:focus,
 #btn_two:hover,
-#btn_two:focus {
-	background-color: grey;
-      }
+#btn_two:focus,
 #btn_one:hover,
-#btn_one:focus {
-	      background-color: grey;
-	    }
+#btn_one:focus,
+#btn_line:hover,
+#btn_line:focus {
+	background-color: grey;
+}
+
 .highlighted {
-  /* opacity: 1; */
-  stroke:rgb(114, 129, 112);
-  stroke-width: 10px;
+	/* opacity: 1; */
+	stroke: rgb(114, 129, 112);
+	stroke-width: 10px;
 }
 
 
@@ -98,27 +77,35 @@ footer {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-      }
+}
 
 #parent_div button {
 	margin-right: 10px;
-      }
+}
+
 #sort_btn {
 	margin-left: auto;
 }
 
 .x_axis_label {
-        font-family: Arial, sans-serif;
-        font-size: 21px;
-        font-weight: bold;
-        /* fill: #333333; */
+	font-family: Arial, sans-serif;
+	font-size: 21px;
+	font-weight: bold;
+	/* fill: #333333; */
 	background-color: #f262f2;
-        padding: 5px;
-    }
+	padding: 5px;
+}
 
-    .y_axis_label {
-        font-family: Arial, sans-serif;
-        font-size: 21px;
-        font-weight: bold;
-        fill: #333333;
-    }
+.y_axis_label {
+	font-family: Arial, sans-serif;
+	font-size: 21px;
+	font-weight: bold;
+	fill: #333333;
+}
+
+.y_axis_label_text {
+	font-family: Arial, sans-serif;
+	font-size: 21px;
+	font-weight: bold;
+	fill: #333333;
+}

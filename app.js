@@ -83,7 +83,6 @@ function barChartTwo(data, margin, width, height) {
 	const states = data.columns.slice(1)
 	showGraph(data, width, height, svg, 100, states)
 	showLegend(svg, states)
-
 }
 
 function barChartThree(data, margin, width, height) {
@@ -302,6 +301,199 @@ function removeDiv(id) {
 	d3.select(id).remove();
 }
 
+function lineChart() {
+
+	// set the dimensions and margins of the graph
+	var margin = { top: 40, right: 25, bottom: 30, left: 60 },
+		width = 1160 - margin.left - margin.right,
+		height = 550 - margin.top - margin.bottom;
+
+	// append the svg object to the body of the page
+	var svg = d3.select("#chartLine")
+		.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform",
+			"translate(" + margin.left + "," + margin.top + ")");
+
+	//Read the data
+	d3.csv("total_nom_data.csv", function (data) {
+
+		// Add X axis --> it is a date format
+		var x = d3.scaleLinear()
+			.domain(d3.extent(data, function (d) { return d.year }))
+			.range([0, width])
+		svg.append("g")
+			.attr("transform", "translate(0," + height + ")")
+			.call(d3.axisBottom(x).ticks(0));
+
+		//hard code the value for each year on xAxis to replace comma values(eg. 2,005)
+		svg.append("text")
+			.attr("x", -15)
+			.attr("y", 500)
+			.text("2012");
+		svg.append("text")
+			.attr("x", 107)
+			.attr("y", 500)
+			.text("2013");
+		svg.append("text")
+			.attr("x", 229)
+			.attr("y", 500)
+			.text("2014");
+		svg.append("text")
+			.attr("x", 351)
+			.attr("y", 500)
+			.text("2015");
+		svg.append("text")
+			.attr("x", 473)
+			.attr("y", 500)
+			.text("2016");
+		svg.append("text")
+			.attr("x", 595)
+			.attr("y", 500)
+			.text("2017");
+		svg.append("text")
+			.attr("x", 717)
+			.attr("y", 500)
+			.text("2018");
+		svg.append("text")
+			.attr("x", 839)
+			.attr("y", 500)
+			.text("2019");
+		svg.append("text")
+			.attr("x", 961)
+			.attr("y", 500)
+			.text("2020");
+		svg.append("text")
+			.attr("class", "y_axis_label")
+			.attr("x", 520)
+			.attr("y", 505)
+			.text("Year");
+
+		// Add Y axis
+		var y = d3.scaleLinear()
+			.domain([0, d3.max(data, function (d) { return +d.total_nom; })])
+			.range([height, 0]);
+		svg.append("g")
+			.call(d3.axisLeft(y));
+
+		// append y-axis label text
+		svg.append("text")
+			.attr("class", "y_axis_label_text")
+			.attr("transform", "rotate(-90)")
+			.attr("x", -280)
+			.attr("y", -43) // Adjust the y position based on your preference
+			.text("Total NOM values");
+
+		// group the data: I want to draw one line per group
+		var sumstat = d3.nest()
+			.key(function (d) { return d.State; })
+			.entries(data);
+
+		// color palette
+		var res = sumstat.map(function (d) { return d.key }) // list of group names
+		var color = d3.scaleOrdinal()
+			.domain(res)
+			.range(["#1f77b4", "gray", "#2ca02c", "#d62728", "#9467bd", "#ff7f0e", "#f2cfe5", "#17becf"])
+
+		// Draw the line
+		const labels = svg.selectAll(".line")
+			.data(sumstat)
+			.enter()
+			.append("path")
+			.attr("fill", "none")
+			.attr("class", "line")
+			.attr("stroke", function (d) { return color(d.key) })
+			.attr("stroke-width", 3.5)
+			.attr("state", function (d) { return d.State })
+			.attr("d", function (d) {
+				return d3.line()
+					.x(function (d) { return x(d.year); })
+					.y(function (d) { return y(d.total_nom); })
+					(d.values)
+			})
+
+		//scaling for x axis of points
+		var xScale = d3.scaleLinear()
+			.domain([2012, 2020])
+			.rangeRound([width, 0])
+
+		//scaling for y axis of points
+		var yScale = d3.scaleLinear()
+			.domain([340, 96430])
+			.range([0, height])
+
+		//temporary variables for hovering transition
+		var tempState;
+		var tempSvg = svg.selectAll(".text")
+			.data(data)
+			.enter()
+			.append("text")
+
+		//hovering transition
+		labels.on("mouseover", function (d) {
+			tempState = d.key
+			duration = 400
+			d3.select(this)
+				.attr("stroke-width", 6.5)
+			// .attr("opacity", 2)
+
+			d3.select(this.parentNode)
+				.transition()
+				.duration(duration)
+				.ease(d3.easeCubic)
+				.attr("opacity", 1);
+			svg.selectAll(".line:not(:hover)")
+				.attr("opacity", 0.3)
+
+			tempSvg
+				.transition()
+				.duration(300)
+				.ease(d3.easeCubic)
+				.text(function (d) {
+					if (d.State == tempState) {
+						return d.total_nom
+					}
+				})
+				.attr("x", function (d) {
+					if (d.State == tempState) {
+						return width - xScale(d.year) + 5;
+					}
+				})
+				.attr("y", function (d) {
+					if (d.State == tempState) {
+						return height - yScale(d.total_nom) - 10;
+					}
+				})
+				.style("opacity", 1)
+		}
+		)
+			.on("mouseout", function (d, i, g) {
+				duration = 300
+				d3.select(this)
+					.attr("stroke-width", 3.5)
+				svg.selectAll(".line")
+					.attr("opacity", 1)
+				d3.select(g[i])
+					.transition()
+					.duration(duration)
+					.ease(d3.easeCubic)
+				// .attr("opacity", 1);
+				tempSvg
+					.transition()
+					.delay(duration * 2)
+					.duration(duration * 3)
+					.ease(d3.easeCubic)
+					.style("opacity", 0)
+			})
+
+		const states = ['New South Wales', 'Victoria', 'Queensland', 'South Australia', 'Western Australia', 'Tasmania', 'Northern Territory', 'Australian Capital Territory'];
+		//show legend
+		showLegend(svg, states);
+	})
+}
+
 
 function main() {
 	console.log("Connected")
@@ -309,48 +501,88 @@ function main() {
 		width = 1250 - margin.left - margin.right,
 		height = 540 - margin.top - margin.bottom;
 
+	var countOne = 0;
 	const btnOne = document.querySelector('#btn_one')
 	btnOne.addEventListener('click', function () {
+		if (countOne == 0) {
+			addDiv("chartOne")
 
-		addDiv("chartOne")
+			removeDiv("#chartTwo")
+			removeDiv("#chartThree")
+			removeDiv("#chartLine")
 
-		removeDiv("#chartTwo")
-		removeDiv("#chartThree")
+			d3.csv("data_clean.csv", function (data) {
+				barChartOne(data, margin, width, height)
+			})
 
-		d3.csv("data_clean.csv", function (data) {
-			barChartOne(data, margin, width, height)
-		})
+			countTwo = 0;
+			countThree = 0;
+			countLine = 0;
+		}
+		countOne++;
 	})
 
+	var countTwo = 0;
 	const btnTwo = document.querySelector('#btn_two')
 	btnTwo.addEventListener('click', function () {
-		console.log("Hey button has been clicked once")
+		if (countTwo == 0) {
+			console.log("Hey button has been clicked once")
 
-		removeDiv("#chartOne")
-		removeDiv("#chartThree")
+			removeDiv("#chartOne")
+			removeDiv("#chartThree")
+			removeDiv("#chartLine")
 
-		addDiv("chartTwo")
-		d3.csv("data_clean_2.csv", function (data) {
-			barChartTwo(data, margin, width, height)
-		})
-		// showSortBtn();
+			addDiv("chartTwo")
+			d3.csv("data_clean_2.csv", function (data) {
+				barChartTwo(data, margin, width, height)
+			})
+			// showSortBtn();
+
+			countOne = 0;
+			countThree = 0;
+			countLine = 0;
+		}
+		countTwo++;
 	})
 
-
+	var countThree = 0;
 	const btnThree = document.querySelector('#btn_three')
 	btnThree.addEventListener('click', function () {
+		if (countThree == 0) {
+			removeDiv("#chartOne")
+			removeDiv("#chartTwo")
+			removeDiv("#chartLine")
 
-		removeDiv("#chartOne")
-		removeDiv("#chartTwo")
+			addDiv("chartThree")
 
-		addDiv("chartThree")
-
-		d3.csv("data_clean_3.csv", function (data) {
-			console.log("It is reaching here")
-			barChartThree(data, margin, width, height)
-		})
+			d3.csv("data_clean_3.csv", function (data) {
+				console.log("It is reaching here")
+				barChartThree(data, margin, width, height)
+			})
+			countOne = 0;
+			countTwo = 0;
+			countLine = 0;
+		}
+		countThree++
 	})
 
+	var countLine = 0;
+	const btnLine = document.querySelector('#btn_line')
+	btnLine.addEventListener('click', function () {
+		if (countLine == 0) {
+			removeDiv("#chartOne")
+			removeDiv("#chartTwo")
+			removeDiv("#chartThree")
+
+			addDiv("chartLine")
+			lineChart()
+
+			countOne = 0;
+			countTwo = 0;
+			countThree = 0;
+			countLine++;
+		}
+	})
 
 }
 document.onload = main()
